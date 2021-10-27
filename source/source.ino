@@ -9,14 +9,10 @@
 Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 #define USE_ARDUINO_INTERRUPTS true // Set-up low-level interrupts for most acurate BPM math.
-#include <PulseSensorPlayground.h>  // Includes the PulseSensorPlayground Library.
+#include <PulseSensorPlayground.h>  
 
-//  Variables
 const int PulseWire = 0; // PulseSensor PURPLE WIRE connected to ANALOG PIN 0
 const int LED13 = 13;    // The on-board Arduino LED, close to PIN 13.
-int Threshold = 550;     // Determine which Signal to "count as a beat" and which to ignore.
-// Use the "Gettting Started Project" to fine-tune Threshold Value beyond default setting.
-// Otherwise leave the default "550" value.
 
 PulseSensorPlayground pulseSensor; // Creates an instance of the PulseSensorPlayground object called "pulseSensor"
 
@@ -28,7 +24,6 @@ void setup()
     // Configure the PulseSensor object, by assigning our variables to it.
     pulseSensor.analogInput(PulseWire);
     pulseSensor.blinkOnPulse(LED13); //auto-magically blink Arduino's LED with heartbeat.
-    pulseSensor.setThreshold(Threshold);
 
     // Double-check the "pulseSensor" object was created and "began" seeing a signal.
     if (pulseSensor.begin())
@@ -69,12 +64,15 @@ void loop()
         oled.print("BPM: ");   // text to display
         oled.println(myBPM);   // text to display
         oled.setTextSize(1.5); // text size
-        if (myBPM <= 100 && myBPM >= 60)
-            oled.print("Your HeartBeat is normal. You will live!"); // text to display
+        if(myBPM<60){
+          oled.print("Your heartbeat is bellow average"); // text to display
+        }
+        else if (myBPM <= 100 && myBPM >= 60)
+            oled.print("Your HeartBeat is normal"); // text to display
         else
-            oled.print("Your are going to die!"); // text to display
+            oled.print("Your above average"); // text to display
         oled.display();                           // show on OLED
     }
 
-    delay(20); // considered best practice in a simple sketch.
+//    delay(20); // considered best practice in a simple sketch.
 }
